@@ -18,3 +18,29 @@ Mobile, Connect, Cloud
 현재 하는 일이 없는 작은 코드상에서는 SOLID 를 대입할 필요는 없음
 
 preparedStatement, statement 비교
+
+DI 의 개념
+
+디펜던시 룩업
+디펜던시 인젝션
+
+스프링은 싱글톤 패턴을 통해서 전달 - 인스턴스의 재활용 측면
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
