@@ -5,47 +5,118 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 public class UserDao {
 
-	private ConnectionMaker connectionMaker;
+	private DataSource dataSource;
 
-	public UserDao(ConnectionMaker connectionMaker) {
-		this.connectionMaker = connectionMaker;
+	public UserDao() {
+
 	}
 
-	public User get(String id) throws ClassNotFoundException, SQLException {
-		Connection connection = connectionMaker.getConnection();
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
 
-		String sql = "SELECT id, name, password FROM userinfo WHERE id = ?";
+	public User get(String id) throws SQLException {
 
-		PreparedStatement preparedStatement = connection.prepareStatement(sql);
-		preparedStatement.setString(1, id);
-		ResultSet resultSet = preparedStatement.executeQuery();
-		resultSet.next();
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		User user = null;
 
-		User user = new User();
-		user.setId(resultSet.getString("id"));
-		user.setName(resultSet.getString("name"));
-		user.setPassword(resultSet.getString("password"));
+		try {
+			connection = dataSource.getConnection();
 
-		resultSet.close();
-		preparedStatement.close();
-		connection.close();
+			String sql = "SELECT id, name, password FROM userinfo WHERE id = ?";
 
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, id);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				user = new User();
+				user.setId(resultSet.getString("id"));
+				user.setName(resultSet.getString("name"));
+				user.setPassword(resultSet.getString("password"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				if (resultSet != null)
+					resultSet.close();
+			} catch (Exception e2) {
+			}
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} catch (Exception e2) {
+			}
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (Exception e2) {
+			}
+		}
 		return user;
 	}
 
-	public void add(User user) throws SQLException, ClassNotFoundException {
-		Connection connection = connectionMaker.getConnection();
-		String sql = "INSERT INTO userinfo(id, name, password) VALUES(?, ?, ?)";
+	public void add(User user) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = dataSource.getConnection();
+			String sql = "INSERT INTO userinfo(id, name, password) VALUES(?, ?, ?)";
 
-		PreparedStatement preparedStatement = connection.prepareStatement(sql);
-		preparedStatement.setString(1, user.getId());
-		preparedStatement.setString(2, user.getName());
-		preparedStatement.setString(3, user.getPassword());
-		preparedStatement.executeUpdate();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, user.getId());
+			preparedStatement.setString(2, user.getName());
+			preparedStatement.setString(3, user.getPassword());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} catch (Exception e2) {
+			}
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (Exception e2) {
+			}
+		}
 
-		preparedStatement.close();
-		connection.close();
+	}
+
+	public void delete(String id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = dataSource.getConnection();
+			String sql = "DELETE FROM userinfo WHERE id = ?";
+
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, id);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} catch (Exception e2) {
+			}
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (Exception e2) {
+			}
+		}
 	}
 }
