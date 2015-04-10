@@ -1,6 +1,7 @@
 package kr.ac.jejuuniv.userdao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.sql.SQLException;
 import java.util.Random;
@@ -22,7 +23,7 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void get() throws ClassNotFoundException, SQLException {
+	public void get() throws SQLException {
 
 		String id = "hulk";
 		String name = "허윤호";
@@ -36,7 +37,7 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void add() throws ClassNotFoundException, SQLException {
+	public void add() throws SQLException {
 
 		User user = new User();
 
@@ -57,7 +58,7 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void delete() throws ClassNotFoundException, SQLException {
+	public void delete() throws SQLException {
 		User user = new User();
 
 		String id = String.valueOf(new Random().nextInt());

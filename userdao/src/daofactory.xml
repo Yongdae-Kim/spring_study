@@ -7,12 +7,16 @@
 		class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="com.mysql.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://113.198.162.106/jeju?characterEncoding=utf-8" />
-		<property name="username" value="jeju" />
-		<property name="password" value="jejupw" />
+			value="jdbc:mysql://117.17.102.143/spring?characterEncoding=utf-8" />
+		<property name="username" value="root" />
+		<property name="password" value="Starter" />
 	</bean>
 
 	<bean id="userDao" class="kr.ac.jejuuniv.userdao.UserDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
